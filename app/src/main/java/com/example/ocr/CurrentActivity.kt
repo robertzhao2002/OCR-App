@@ -31,6 +31,7 @@ class CurrentActivity : AppCompatActivity(){
 
 //        val a = supportActionBar
 //        a!!.setDisplayHomeAsUpEnabled(true)
+        
         fulltext.text = currentItem!!.full_text
         Log.d("1", currentItem!!.full_text)
 
