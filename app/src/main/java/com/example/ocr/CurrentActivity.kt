@@ -28,12 +28,13 @@ class CurrentActivity : AppCompatActivity(){
         var currentItem : OCRItem? = OCRItem("TEMP", "TEMP", "TEMP")
 
         currentItem = intent.getParcelableExtra("item")
-
-//        val a = supportActionBar
-//        a!!.setDisplayHomeAsUpEnabled(true)
         
         fulltext.text = currentItem!!.full_text
         Log.d("1", currentItem!!.full_text)
+
+        val a = supportActionBar
+        a!!.title = currentItem!!.full_text
+        a!!.setDisplayHomeAsUpEnabled(true)
 
         audioFragment = AudioFragment()
         fulltext.text = currentItem!!.full_text
@@ -58,7 +59,7 @@ class CurrentActivity : AppCompatActivity(){
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.text_item -> {
-                    textFragment = TextFragment()
+                    textFragment = TextFragment.newInstance(currentItem!!.full_text)
                     fulltext.text = currentItem!!.full_text
                     supportFragmentManager
                             .beginTransaction()
@@ -70,5 +71,10 @@ class CurrentActivity : AppCompatActivity(){
             }
             false
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
