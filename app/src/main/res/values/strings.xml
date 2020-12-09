@@ -11,4 +11,5 @@
     <string name="listen">Listen</string>
     <string name="share">SHARE/EXPORT AUDIO</string>
     <string name="share_text">SHARE TEXT</string>
+    <string name="snack">RETRY</string>
 </resources>
