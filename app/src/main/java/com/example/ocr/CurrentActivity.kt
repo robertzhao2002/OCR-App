@@ -10,7 +10,11 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CurrentActivity : AppCompatActivity(){
@@ -23,20 +27,34 @@ class CurrentActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.current_note)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
         fulltext = layoutInflater.inflate(R.layout.fragment_text, RelativeLayout(this@CurrentActivity)).findViewById(R.id.textbody)
+        var extracttext : String? = null
+
         Log.d("1",fulltext.text.toString())
-        var currentItem : OCRItem? = OCRItem("TEMP", "TEMP", "TEMP")
+        var currentItem : OCRItem? = OCRItem("TEMP", intArrayOf(R.drawable.takepicture), "TEMP")
 
         currentItem = intent.getParcelableExtra("item")
-        
-        fulltext.text = currentItem!!.full_text
+
+        intent.extras?.let{bundle ->
+            extracttext = bundle.get("full_text") as String?
+        }
+
+        if (currentItem != null) fulltext.text = currentItem!!.full_text
+        if (extracttext != null) {
+            currentItem = OCRItem(extracttext!!, intArrayOf(R.drawable.takepicture), "TEMP")
+            fulltext.text = currentItem!!.full_text
+        }
+
         Log.d("1", currentItem!!.full_text)
 
         val a = supportActionBar
         a!!.title = currentItem!!.full_text
         a!!.setDisplayHomeAsUpEnabled(true)
 
-        audioFragment = AudioFragment()
+
+
+        audioFragment = AudioFragment.newInstance(currentItem!!.image_preview)
         fulltext.text = currentItem!!.full_text
         supportFragmentManager
             .beginTransaction()
@@ -49,7 +67,7 @@ class CurrentActivity : AppCompatActivity(){
         bottom_nav.setOnNavigationItemSelectedListener OnNavigationItemSelectedListener@{
             when (it.itemId) {
                 R.id.audio_item -> {
-                    audioFragment = AudioFragment()
+                    audioFragment = AudioFragment.newInstance(currentItem!!.image_preview)
                     fulltext.text = currentItem!!.full_text
                     supportFragmentManager
                             .beginTransaction()
@@ -77,4 +95,6 @@ class CurrentActivity : AppCompatActivity(){
         onBackPressed()
         return true
     }
+
+
 }

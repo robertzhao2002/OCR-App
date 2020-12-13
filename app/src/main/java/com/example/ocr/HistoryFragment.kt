@@ -13,14 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-var historylist = arrayListOf<OCRItem>(OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("svbn dfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("sfhgbvndfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("scvbdfgljcvbnbvmvchsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"),
-    OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", "sdfgsdfg", "sdfgdsf"))
+var historylist = arrayListOf<OCRItem>(OCRItem("sdfgljhsdfgoksjdfhgjghbdsfjbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"),
+    OCRItem("svbn dfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"),
+    OCRItem("sfhgbhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background, R.drawable.ic_launcher_foreground), "sdfgdsf"),
+    OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"),
+    OCRItem("scvbdfgljcvbnbvmvchsdfgoksjdfhgljksdbfgljsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"))
 
 /**
  * A simple [Fragment] subclass.
