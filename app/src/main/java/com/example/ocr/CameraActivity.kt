@@ -50,7 +50,7 @@ class CameraActivity : AppCompatActivity() {
                 val visionBuilder = Vision.Builder(NetHttpTransport(), AndroidJsonFactory(), null)
 
                 visionBuilder.setVisionRequestInitializer(
-                    VisionRequestInitializer("AIzaSyCbhDmxR5dFz33GDQieiWK0ALUL5aXVkNU")
+                    VisionRequestInitializer("SECRET LMAOOOOOOOOO")
                 )
                 val vision = visionBuilder.build()
 
