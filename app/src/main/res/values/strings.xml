@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">OCR</string>
     <string name="camera">CAMERA</string>
-    <string name="import_pdf_or_image">IMPORT PDF OR IMAGE</string>
+    <string name="import_pdf_or_image">IMPORT IMAGE</string>
     <string name="home">Home</string>
     <string name="history">History</string>
     <string name="title">TITLE</string>

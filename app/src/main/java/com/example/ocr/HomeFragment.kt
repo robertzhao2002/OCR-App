@@ -1,16 +1,30 @@
 package com.example.ocr
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.api.services.vision.v1.model.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.io.ByteArrayOutputStream
+import java.util.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +41,9 @@ class HomeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var cameraButton: Button
+    lateinit var importButton: Button
+    private var pickImage : Int = 100
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,28 +53,55 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        importButton = root.findViewById(R.id.button_import)
+        importButton.setOnClickListener {
+            val photoPickerIntent = Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.INTERNAL_CONTENT_URI
+            )
+            photoPickerIntent.type = "image/*"
+            startActivityForResult(photoPickerIntent, pickImage)
+        }
         cameraButton = root.findViewById(R.id.button_camera)
         cameraButton.setOnClickListener {
             val context = activity
-            if(ContextCompat.checkSelfPermission(context!!.applicationContext, android.Manifest.permission.CAMERA)
+            if(ContextCompat.checkSelfPermission(
+                    context!!.applicationContext,
+                    android.Manifest.permission.CAMERA
+                )
                     != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context!!.applicationContext, android.Manifest.permission.RECORD_AUDIO)
+                    ContextCompat.checkSelfPermission(
+                        context!!.applicationContext,
+                        android.Manifest.permission.RECORD_AUDIO
+                    )
                     != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context!!.applicationContext, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    ContextCompat.checkSelfPermission(
+                        context!!.applicationContext,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
                     != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context!!.applicationContext, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    ContextCompat.checkSelfPermission(
+                        context!!.applicationContext,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    )
                     != PackageManager.PERMISSION_GRANTED) {
 
                 class MyRetryListener : View.OnClickListener {
                     override fun onClick(v: View) {
-                        ActivityCompat.requestPermissions(context, arrayOf(android.Manifest.permission.CAMERA,
+                        ActivityCompat.requestPermissions(
+                            context, arrayOf(
+                                android.Manifest.permission.CAMERA,
                                 android.Manifest.permission.RECORD_AUDIO,
                                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+                                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                            ), 1
+                        )
 
 
                     }
@@ -75,6 +119,14 @@ class HomeFragment : Fragment() {
 
         }
         return root
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+        }
     }
 
     companion object {

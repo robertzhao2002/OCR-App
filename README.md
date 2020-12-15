@@ -1,1 +1,3 @@
-# OCR-App
+This is an OCR App that can detect text from images by using Google Cloud Vision-To-Text API. Right now, you can take a picture of something with text on it, and it will detect that text and save your past camera actions. It will then use Google Voice-To-Text API to read out the text that was detected (NOT DONE YET).
+
+I did not have time to implement the import photos mode, PDF mode, or the media player. Working on this big project alone is a tall task!

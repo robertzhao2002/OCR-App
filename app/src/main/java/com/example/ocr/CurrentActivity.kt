@@ -3,18 +3,10 @@ package com.example.ocr
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.View.inflate
-import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CurrentActivity : AppCompatActivity(){
@@ -30,19 +22,21 @@ class CurrentActivity : AppCompatActivity(){
 
         fulltext = layoutInflater.inflate(R.layout.fragment_text, RelativeLayout(this@CurrentActivity)).findViewById(R.id.textbody)
         var extracttext : String? = null
+        var photoD : ByteArray? = null
 
         Log.d("1",fulltext.text.toString())
-        var currentItem : OCRItem? = OCRItem("TEMP", intArrayOf(R.drawable.takepicture), "TEMP")
+        var currentItem : OCRItem? = null
 
         currentItem = intent.getParcelableExtra("item")
 
         intent.extras?.let{bundle ->
             extracttext = bundle.get("full_text") as String?
+            photoD = bundle.get("pic") as ByteArray?
         }
 
         if (currentItem != null) fulltext.text = currentItem!!.full_text
-        if (extracttext != null) {
-            currentItem = OCRItem(extracttext!!, intArrayOf(R.drawable.takepicture), "TEMP")
+        if (photoD != null && extracttext != null) {
+            currentItem = OCRItem(extracttext!!, image_byte = photoD, audio = "TEMP")
             fulltext.text = currentItem!!.full_text
         }
 
@@ -53,8 +47,8 @@ class CurrentActivity : AppCompatActivity(){
         a!!.setDisplayHomeAsUpEnabled(true)
 
 
-
-        audioFragment = AudioFragment.newInstance(currentItem!!.image_preview)
+//        audioFragment = AudioFragment.newInstance(images = currentItem!!.image_preview)
+        audioFragment = AudioFragment.newInstance(images1 = currentItem!!.image_byte!!)
         fulltext.text = currentItem!!.full_text
         supportFragmentManager
             .beginTransaction()
@@ -67,7 +61,8 @@ class CurrentActivity : AppCompatActivity(){
         bottom_nav.setOnNavigationItemSelectedListener OnNavigationItemSelectedListener@{
             when (it.itemId) {
                 R.id.audio_item -> {
-                    audioFragment = AudioFragment.newInstance(currentItem!!.image_preview)
+//                    audioFragment = AudioFragment.newInstance(images = currentItem!!.image_preview)
+                    audioFragment = AudioFragment.newInstance(images1 = currentItem!!.image_byte!!)
                     fulltext.text = currentItem!!.full_text
                     supportFragmentManager
                             .beginTransaction()

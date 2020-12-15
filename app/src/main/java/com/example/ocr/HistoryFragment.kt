@@ -1,5 +1,6 @@
 package com.example.ocr
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,17 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-var historylist = arrayListOf<OCRItem>(OCRItem("sdfgljhsdfgoksjdfhgjghbdsfjbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"),
-    OCRItem("svbn dfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"),
-    OCRItem("sfhgbhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background, R.drawable.ic_launcher_foreground), "sdfgdsf"),
-    OCRItem("sdfgljhsdfgoksjdfhgljksdbfgljkhsdbfgljhsbdfljghbdsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"),
-    OCRItem("scvbdfgljcvbnbvmvchsdfgoksjdfhgljksdbfgljsfjkhgbsdkfjhbgkdjsfhbgkjhsdfbgjkhsbdf", intArrayOf(R.drawable.ic_launcher_background), "sdfgdsf"))
+var historylist = arrayListOf<OCRItem>()
 
 /**
  * A simple [Fragment] subclass.
@@ -28,6 +27,9 @@ class HistoryFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    private var PRIVATE_MODE = 0
+    private val PREF_NAME = "OCR"
 
     lateinit var recyclerView : RecyclerView
     lateinit var mAdapter : RecyclerView.Adapter<*>
@@ -47,6 +49,10 @@ class HistoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_history, container, false)
+        val sharedPref: SharedPreferences = this.activity!!.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+        val gson = Gson()
+        val myType = object : TypeToken<ArrayList<OCRItem>>() {}.type
+        historylist = gson.fromJson<ArrayList<OCRItem>>(sharedPref.getString("history", null), myType)
         recyclerView = root.findViewById(R.id.history)
         mAdapter = HistoryAdapter(historylist)
         recyclerView.adapter = mAdapter

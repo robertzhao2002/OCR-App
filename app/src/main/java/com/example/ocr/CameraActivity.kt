@@ -3,6 +3,7 @@ package com.example.ocr
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,8 @@ import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.services.vision.v1.Vision
 import com.google.api.services.vision.v1.VisionRequestInitializer
 import com.google.api.services.vision.v1.model.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraView
 import com.otaliastudios.cameraview.PictureResult
@@ -28,10 +31,18 @@ class CameraActivity : AppCompatActivity() {
     lateinit var camera : CameraView
     lateinit var cameraButton : ImageView
 
+    private var PRIVATE_MODE = 0
+    private val PREF_NAME = "OCR"
+
+    private var historylist : ArrayList<OCRItem>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.snap)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
+        val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+
         val a = supportActionBar
         a!!.hide()
         camera = findViewById(R.id.camera)
@@ -50,7 +61,7 @@ class CameraActivity : AppCompatActivity() {
                 val visionBuilder = Vision.Builder(NetHttpTransport(), AndroidJsonFactory(), null)
 
                 visionBuilder.setVisionRequestInitializer(
-                    VisionRequestInitializer("AIzaSyC5vvVcfsEqVAZxJoIYIPwENdQJ_MglIPM")
+                    VisionRequestInitializer("SECRET LMAOOOOO")
                 )
                 val vision = visionBuilder.build()
 
@@ -69,13 +80,26 @@ class CameraActivity : AppCompatActivity() {
 
                     batchRequest.requests = listOf(request)
                     val batchResponse = vision.images().annotate(batchRequest).execute()
-                    val text: TextAnnotation = batchResponse.responses[0].fullTextAnnotation
-                    full_text = text.text
+                    val text: TextAnnotation? = batchResponse.responses[0].fullTextAnnotation
+                    if (text != null)
+                        full_text = text!!.text
+                    else
+                        full_text = "NONE"
                     Log.d("detected text", full_text)
+
+                    val gson = Gson()
+                    val myType = object : TypeToken<ArrayList<OCRItem>>() {}.type
+                    historylist = gson.fromJson<ArrayList<OCRItem>>(sharedPref.getString("history", null), myType)
+                    historylist!!.add(OCRItem(full_text, image_byte = photoData, audio="TEMP"))
                     val intent = Intent(this@CameraActivity, CurrentActivity::class.java).apply {
                         putExtra("full_text", full_text)
+                        putExtra("pic", photoData)
                     }
                     startActivity(intent)
+                    val json: String = gson.toJson(historylist)
+                    val editor = sharedPref.edit()
+                    editor.putString("history", json)
+                    editor.apply()
                     finish()
                 }
                 Toast.makeText(applicationContext, "RENDERING ...", Toast.LENGTH_LONG).show()
@@ -90,7 +114,7 @@ class CameraActivity : AppCompatActivity() {
         })
 
         cameraButton.setOnClickListener {
-            camera.takePicture()
+            camera.takePictureSnapshot()
         }
 
 
